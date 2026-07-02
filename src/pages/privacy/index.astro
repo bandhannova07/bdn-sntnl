@@ -1,0 +1,116 @@
+---
+import SEO from '../../components/SEO.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en" class="bg-[#030303]">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <SEO title="Privacy Policy - BandhanNova Sentinel" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-[#030303] text-gray-300 font-sans min-h-screen relative overflow-x-hidden selection:bg-violet-500/30 selection:text-white">
+  <!-- Premium Background Glows -->
+  <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-violet-600/5 blur-[120px] pointer-events-none"></div>
+  <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-fuchsia-600/5 blur-[120px] pointer-events-none"></div>
+
+  <!-- Decorative grid overlay -->
+  <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.007)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.007)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+
+  <header class="border-b border-white/5 bg-[#030303]/40 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
+        <img src="/favicon.ico" alt="Sentinel Logo" class="w-9 h-9 object-contain" />
+        <span class="text-xl tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-400 mt-0.5" style="font-family: 'Virgo 01', sans-serif;">
+          Sentinel
+        </span>
+      </a>
+      <a href="/signin" class="text-xs font-bold text-gray-400 hover:text-white uppercase tracking-wider transition-colors" style="font-family: 'Space Grotesk', sans-serif;">
+        Go to Dashboard →
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-16 md:py-24 relative z-10">
+    <div class="space-y-4 mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold">
+        🛡️ Legal & Privacy
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-none" style="font-family: 'Space Grotesk', sans-serif;">
+        Privacy Policy
+      </h1>
+      <p class="text-sm text-gray-500">
+        Last Updated: July 1, 2026 • Version 1.0.0
+      </p>
+    </div>
+
+    <div class="prose prose-invert max-w-none space-y-8 text-[15px] leading-relaxed text-gray-400 font-normal" style="font-family: 'Inter', sans-serif;">
+      
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">1. Introduction</h2>
+        <p>
+          Welcome to <strong>BandhanNova Sentinel</strong> ("we," "our," "us"). We are committed to protecting the privacy and security of your developers' telemetry, log payloads, error reports, and user profile data. This Privacy Policy details how we collect, process, isolate, and secure data when you integrate the Sentinel SDK or utilize our main server dashboard.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">2. Information We Collect</h2>
+        <p>
+          When you use BandhanNova Sentinel, we collect and process the following categories of information:
+        </p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li><strong>User Profile Data:</strong> Name, email address, profile picture, and Google authentication details provided during login.</li>
+          <li><strong>Project Metadata:</strong> Project names, workspace IDs, API keys, and notification endpoint configurations (e.g., Discord webhooks, Slack endpoints).</li>
+          <li><strong>Telemetry & Error Logs:</strong> Debug logs, stack traces, system logs, web vitals performance metrics, and network trace data sent via the Sentinel SDK.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">3. Data Isolation and Storage</h2>
+        <p>
+          We employ strict multi-tenant database isolation to keep your projects isolated.
+        </p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li><strong>Database Architecture:</strong> Your project data is isolated and safely processed using Turso Database Relay Nodes.</li>
+          <li><strong>Security:</strong> All databases are protected via individual access tokens. Sensitive data like client secrets, Discord/Slack webhooks, and API keys are stored in encrypted format.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">4. Data Usage</h2>
+        <p>
+          We use the collected data exclusively to:
+        </p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li>Monitor, store, query, and visualizer your system logs, errors, and traces.</li>
+          <li>Trigger automated webhook alerts to Slack, Discord, or WhatsApp as configured in your settings.</li>
+          <li>Generate AI-assisted root cause analysis insights using <strong>Sentinel AI</strong> (powered by Cerebras LPU architecture).</li>
+        </ul>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">5. SOC-2 & GDPR Compliance</h2>
+        <p>
+          Sentinel is designed to be fully transparent and compliant with major security frameworks. We do not sell or monetize your telemetry or profile logs. You retain complete ownership over all payload data ingested by our server endpoints.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">6. Contact Us</h2>
+        <p>
+          If you have questions about this policy or request data deletion, contact us at <a href="mailto:support@bandhannova.com" class="text-violet-400 hover:underline">support@bandhannova.com</a>.
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="border-t border-white/5 py-12 text-center text-xs text-gray-600 bg-[#020202]">
+    <p>© 2026 BandhanNova Platforms. All rights reserved.</p>
+  </footer>
+</body>
+</html>

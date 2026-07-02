@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import LoginFlow from '../../features/auth/components/LoginFlow';
+import SEO from '../../components/SEO.astro';
+---
+
+<Layout title="Sign In - BandhanNova Sentinel">
+  <SEO 
+    title="Sign In | BandhanNova Sentinel"
+    description="Sign in to your BandhanNova Sentinel dashboard to monitor your applications."
+  />
+  <main>
+    <LoginFlow client:load />
+  </main>
+</Layout>

@@ -1,0 +1,40 @@
+{
+  "name": "sentinel-frontend",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "serve -s dist",
+    "test": "node ../sdk-test/js/run_all_tests.mjs",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/cloudflare": "^10.0.0",
+    "@astrojs/preact": "^3.3.0",
+    "@astrojs/react": "^3.6.3",
+    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/tailwind": "^6.0.2",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@gsap/react": "^2.1.2",
+    "@mui/icons-material": "^9.1.1",
+    "@mui/material": "^9.1.1",
+    "@tailwindcss/typography": "^0.5.20",
+    "astro": "^4.5.18",
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.21.0",
+    "marked": "^18.0.5",
+    "preact": "^10.29.2",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "serve": "^14.2.6",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3"
+  }
+}

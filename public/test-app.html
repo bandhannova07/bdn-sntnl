@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel SDK Test App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #fff; font-family: 'Segoe UI', sans-serif; padding: 40px; }
+    h1 { margin-bottom: 20px; color: #a78bfa; }
+    .btn { padding: 12px 24px; margin: 8px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; }
+    .btn-error { background: #ef4444; color: white; }
+    .btn-warn { background: #f59e0b; color: black; }
+    .btn-log { background: #3b82f6; color: white; }
+    .btn-fetch { background: #10b981; color: white; }
+    .btn-chaos { background: #ec4899; color: white; font-size: 16px; padding: 16px 32px; }
+    .status { margin-top: 20px; padding: 20px; background: #111; border: 1px solid #333; border-radius: 12px; font-family: monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+    .section { margin: 30px 0; padding: 20px; border: 1px solid #222; border-radius: 12px; }
+    h2 { color: #c084fc; margin-bottom: 12px; }
+    .counter { display: inline-block; background: #1e1b4b; color: #a78bfa; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-left: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🔥 Sentinel SDK Torture Test App</h1>
+  <p style="color: #888; margin-bottom: 30px;">This app deliberately generates errors, logs, traces, and sessions to stress-test the Sentinel APM backend.</p>
+
+  <div class="section">
+    <h2>1. Manual Triggers</h2>
+    <button class="btn btn-error" onclick="triggerError()">🔴 Throw JS Error</button>
+    <button class="btn btn-error" onclick="triggerPromiseRejection()">🔴 Unhandled Promise</button>
+    <button class="btn btn-warn" onclick="triggerWarn()">🟡 Console Warn</button>
+    <button class="btn btn-log" onclick="triggerLog()">🔵 Console Log</button>
+    <button class="btn btn-fetch" onclick="triggerFetch()">🟢 Fetch API Call</button>
+    <button class="btn btn-fetch" onclick="triggerBadFetch()">❌ Fetch to Bad URL</button>
+  </div>
+
+  <div class="section">
+    <h2>2. Stress Tests <span class="counter" id="stress-counter">0 events sent</span></h2>
+    <button class="btn btn-chaos" onclick="runStressTest(50)">🔥 Burst 50 Events</button>
+    <button class="btn btn-chaos" onclick="runStressTest(200)">💀 Burst 200 Events</button>
+    <button class="btn btn-chaos" onclick="runStressTest(500)">☠️ Burst 500 Events</button>
+    <button class="btn btn-chaos" onclick="runContinuousStress()">♾️ Continuous Stress (10s)</button>
+  </div>
+
+  <div class="section">
+    <h2>3. API Direct Injection Test</h2>
+    <button class="btn btn-log" onclick="injectDirectLogs()">📝 Inject 50 Logs via API</button>
+    <button class="btn btn-fetch" onclick="injectDirectTraces()">📊 Inject 50 Traces via API</button>
+    <button class="btn btn-error" onclick="injectDirectErrors()">🚨 Inject 20 Errors via API</button>
+    <button class="btn btn-warn" onclick="injectDirectAgents()">🤖 Inject 10 Agent Runs via API</button>
+  </div>
+
+  <div class="status" id="status">Ready to test...\n</div>
+
+  <!-- Load our Sentinel SDK -->
+  <script src="http://localhost:4321/sentinel-sdk.js"></script>
+  <script>
+    const API = 'http://localhost:8080/api/ingest';
+    let totalEvents = 0;
+
+    // Initialize SDK
+    Sentinel.init({
+      projectId: 'proj_12345',
+      endpoint: 'http://localhost:8080/api/ingest',
+      sessionReplay: false,
+      userId: 'stress-tester-01'
+    });
+
+    function log(msg) {
+      const el = document.getElementById('status');
+      el.textContent += '[' + new Date().toLocaleTimeString() + '] ' + msg + '\n';
+      el.scrollTop = el.scrollHeight;
+    }
+
+    function updateCounter() {
+      totalEvents++;
+      document.getElementById('stress-counter').textContent = totalEvents + ' events sent';
+    }
+
+    // Manual Triggers
+    function triggerError() {
+      log('Throwing a TypeError...');
+      try { null.someMethod(); } catch(e) { throw e; }
+    }
+
+    function triggerPromiseRejection() {
+      log('Creating unhandled promise rejection...');
+      Promise.reject(new Error('Database connection timed out after 30000ms'));
+    }
+
+    function triggerWarn() {
+      log('Sending console.warn...');
+      console.warn('⚠️ Memory usage at 89% - approaching critical threshold');
+    }
+
+    function triggerLog() {
+      log('Sending console.log...');
+      console.log('User session started', { userId: 'test-123', timestamp: Date.now() });
+    }
+
+    function triggerFetch() {
+      log('Making successful fetch...');
+      fetch('http://localhost:8080/health').then(r => log('Fetch OK: ' + r.status));
+    }
+
+    function triggerBadFetch() {
+      log('Making fetch to bad URL...');
+      fetch('http://localhost:9999/nonexistent').catch(e => log('Fetch failed (expected): ' + e.message));
+    }
+
+    // Stress Tests
+    function runStressTest(count) {
+      log('🔥 STRESS TEST: Firing ' + count + ' events rapidly...');
+      var start = Date.now();
+      
+      for (var i = 0; i < count; i++) {
+        var type = i % 4;
+        if (type === 0) console.log('Stress log #' + i + ' - ' + Math.random());
+        else if (type === 1) console.warn('Stress warn #' + i + ' - memory leak detected');
+        else if (type === 2) console.error('Stress error #' + i + ' - connection refused');
+        else console.info('Stress info #' + i + ' - heartbeat OK');
+        updateCounter();
+      }
+      
+      log('✅ Burst complete in ' + (Date.now() - start) + 'ms');
+    }
+
+    function runContinuousStress() {
+      log('♾️ Starting 10-second continuous stress...');
+      var interval = setInterval(function() {
+        for (var i = 0; i < 10; i++) {
+          console.log('Continuous stress #' + totalEvents + ' at ' + Date.now());
+          updateCounter();
+        }
+      }, 100);
+
+      setTimeout(function() {
+        clearInterval(interval);
+        log('✅ Continuous stress test complete. Total: ' + totalEvents + ' events');
+      }, 10000);
+    }
+
+    // Direct API Injection
+    function injectDirectLogs() {
+      log('📝 Injecting 50 logs directly to API...');
+      var levels = ['info', 'warn', 'error', 'debug', 'log'];
+      var messages = [
+        'Database query completed in 245ms',
+        'Cache miss for key user:profile:42',
+        'Rate limit exceeded for IP 192.168.1.1',
+        'WebSocket connection established',
+        'Background job processed: email-queue',
+        'Auth token refreshed for session abc123',
+        'File upload complete: 2.4MB processed',
+        'Cron job started: cleanup_old_sessions',
+        'Payment webhook received from Stripe',
+        'CDN cache invalidated for /assets/main.css'
+      ];
+
+      for (var i = 0; i < 50; i++) {
+        fetch(API + '/log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project_id: 'proj_12345',
+            level: levels[i % levels.length],
+            message: messages[i % messages.length] + ' [batch-' + i + ']',
+            metadata: { source: 'stress-test', batch: i },
+            timestamp: new Date().toISOString()
+          })
+        }).then(function() { updateCounter(); });
+      }
+      log('✅ 50 log injections dispatched');
+    }
+
+    function injectDirectTraces() {
+      log('📊 Injecting 50 traces directly to API...');
+      var endpoints = [
+        'GET /api/users', 'POST /api/orders', 'GET /api/products',
+        'PUT /api/settings', 'DELETE /api/cache', 'GET /api/analytics',
+        'POST /api/webhooks', 'GET /api/health', 'POST /api/search',
+        'GET /api/notifications'
+      ];
+
+      for (var i = 0; i < 50; i++) {
+        var duration = Math.floor(Math.random() * 2000) + 5;
+        var isError = Math.random() < 0.15;
+        fetch(API + '/trace', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project_id: 'proj_12345',
+            trace_id: 'stress_trace_' + Date.now() + '_' + i,
+            name: endpoints[i % endpoints.length],
+            status: isError ? 'ERROR' : (Math.random() < 0.5 ? '200' : '201'),
+            duration_ms: duration,
+            timestamp: new Date().toISOString()
+          })
+        }).then(function() { updateCounter(); });
+      }
+      log('✅ 50 trace injections dispatched');
+    }
+
+    function injectDirectErrors() {
+      log('🚨 Injecting 20 errors directly to API...');
+      var errors = [
+        { msg: 'TypeError: Cannot read properties of undefined (reading "map")', stack: 'at renderList (Dashboard.tsx:42:8)\nat Array.map (<anonymous>)\nat Dashboard (Dashboard.tsx:38:14)' },
+        { msg: 'RangeError: Maximum call stack size exceeded', stack: 'at fibonacci (utils.ts:12:3)\nat fibonacci (utils.ts:14:10)\nat fibonacci (utils.ts:14:10)' },
+        { msg: 'SyntaxError: Unexpected token < in JSON at position 0', stack: 'at JSON.parse (<anonymous>)\nat fetchData (api.ts:28:22)\nat async loadPage (App.tsx:15:5)' },
+        { msg: 'NetworkError: Failed to fetch', stack: 'at window.fetch\nat apiCall (services/http.ts:45:12)\nat getUser (services/user.ts:8:16)' },
+        { msg: 'Error: SQLITE_BUSY: database is locked', stack: 'at Database.exec (database.go:174:15)\nat createTables (database.go:69:8)\nat InitDB (database.go:38:12)' }
+      ];
+
+      for (var i = 0; i < 20; i++) {
+        var err = errors[i % errors.length];
+        fetch(API + '/error', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project_id: 'proj_12345',
+            message: err.msg + ' [injection-' + i + ']',
+            stack: err.stack,
+            metadata: { source: 'stress-test', injection: i, url: 'http://localhost:4321/test' },
+            timestamp: new Date().toISOString()
+          })
+        }).then(function() { updateCounter(); });
+      }
+      log('✅ 20 error injections dispatched (AI analysis will trigger in background)');
+    }
+
+    function injectDirectAgents() {
+      log('🤖 Injecting 10 agent runs directly to API...');
+      var agentNames = ['CodeReview-Bot', 'DataPipeline-Agent', 'Customer-Support-AI', 'Security-Scanner', 'Deploy-Agent'];
+      var toolsList = ['read_file,grep,write_file', 'sql_query,transform,export', 'search_kb,compose_reply', 'scan_deps,check_vuln', 'build,test,deploy'];
+
+      for (var i = 0; i < 10; i++) {
+        var isError = Math.random() < 0.2;
+        fetch(API + '/agent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project_id: 'proj_12345',
+            agent_name: agentNames[i % agentNames.length],
+            status: isError ? 'ERROR' : 'COMPLETED',
+            llm_calls: Math.floor(Math.random() * 50) + 1,
+            prompt_tokens: Math.floor(Math.random() * 10000) + 500,
+            completion_tokens: Math.floor(Math.random() * 5000) + 200,
+            total_tokens: Math.floor(Math.random() * 15000) + 700,
+            tools_used: toolsList[i % toolsList.length],
+            error: isError ? 'Context window exceeded: 128k tokens' : '',
+            duration_ms: Math.floor(Math.random() * 30000) + 1000,
+            timestamp: new Date().toISOString()
+          })
+        }).then(function() { updateCounter(); });
+      }
+      log('✅ 10 agent run injections dispatched');
+    }
+
+    log('✅ Sentinel SDK initialized. Ready for testing!');
+  </script>
+</body>
+</html>

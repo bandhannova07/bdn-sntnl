@@ -1,0 +1,36 @@
+---
+import DashboardLayout from '../../features/dashboard/components/DashboardLayout';
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — BandhanNova Sentinel</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style is:global>
+        @font-face {
+            font-family: 'Virgo 01';
+            src: url('/fonts/virgo.ttf') format('truetype');
+            font-weight: normal;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: #030303; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::selection { background: rgba(139, 92, 246, 0.3); }
+    </style>
+</head>
+<body class="bg-[#030303] text-white min-h-screen antialiased overflow-hidden">
+
+    <DashboardLayout client:load />
+
+</body>
+</html>

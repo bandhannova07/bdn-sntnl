@@ -1,0 +1,60 @@
+---
+import Navbar from '../features/landing/components/Navbar';
+import HeroSection from '../features/landing/components/HeroSection';
+import FeaturesSection from '../features/landing/components/FeaturesSection';
+import HowItWorks from '../features/landing/components/HowItWorks';
+import TrustSection from '../features/landing/components/TrustSection';
+import PricingSection from '../features/landing/components/PricingSection';
+import CTASection from '../features/landing/components/CTASection';
+import FooterSection from '../features/landing/components/FooterSection';
+import SEO from '../components/SEO.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <SEO />
+
+    <!-- Google Fonts: Space Grotesk (Headings), Inter (Body), JetBrains Mono (Code) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style is:global>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+        /* Selection */
+        ::selection { background: rgba(139, 92, 246, 0.3); }
+
+        /* Smooth transitions for all interactive elements */
+        a, button { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="bg-[#030303] text-white min-h-screen antialiased overflow-x-hidden">
+
+    <Navbar client:load />
+    <HeroSection client:load />
+    <TrustSection client:load />
+    <FeaturesSection client:load />
+    <HowItWorks client:load />
+    <PricingSection client:load />
+    <CTASection client:load />
+    <FooterSection client:load />
+
+</body>
+</html>
